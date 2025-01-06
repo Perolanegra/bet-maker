@@ -1,0 +1,19 @@
+<form [formGroup]="filterForm" class="filter-form">
+  <mat-form-field appearance="fill">
+    <mat-label>Season</mat-label>
+    <mat-select formControlName="selectedCompetition">
+      <mat-option *ngFor="let c of competitions" [value]="c.id">
+        {{ c.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Team</mat-label>
+    <mat-select formControlName="selectedTeam">
+      <mat-option *ngFor="let team of teams" [value]="team.id">
+        {{ team.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>
