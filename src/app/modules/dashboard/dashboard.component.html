@@ -1,19 +1,49 @@
 <form [formGroup]="filterForm" class="filter-form">
-  <mat-form-field appearance="fill">
-    <mat-label>Season</mat-label>
+  <!-- Competition Select -->
+  <mat-form-field appearance="fill" [@fadeInOut]>
+    <mat-label>League/Competition</mat-label>
     <mat-select formControlName="selectedCompetition">
       <mat-option *ngFor="let c of competitions" [value]="c.id">
         {{ c.name }}
       </mat-option>
     </mat-select>
+    <mat-error *ngIf="filterForm.get('selectedCompetition')?.hasError('required')">
+      Please select a league
+    </mat-error>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <!-- Season Select -->
+  <mat-form-field appearance="fill" [@slideInOut]>
+    <mat-label>Season</mat-label>
+    <mat-select formControlName="selectedSeason">
+      <mat-option *ngFor="let season of seasons" [value]="season.id">
+        {{ season.name }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="filterForm.get('selectedseason')?.hasError('required')">
+      Please select a season
+    </mat-error>
+    <mat-spinner *ngIf="isLoading" diameter="20" class="loading-spinner"></mat-spinner>
+  </mat-form-field>
+
+  <!-- Team Select -->
+  <mat-form-field appearance="fill" [@slideInOut]>
     <mat-label>Team</mat-label>
     <mat-select formControlName="selectedTeam">
       <mat-option *ngFor="let team of teams" [value]="team.id">
         {{ team.name }}
       </mat-option>
     </mat-select>
+    <mat-error *ngIf="filterForm.get('selectedTeam')?.hasError('required')">
+      Please select a team
+    </mat-error>
+    <mat-spinner *ngIf="isLoading" diameter="20" class="loading-spinner"></mat-spinner>
   </mat-form-field>
+
+  <!-- Last 30 Games Toggle -->
+  <div class="slide-toggle-container" [@fadeInOut]>
+    <mat-slide-toggle formControlName="last30Games" color="primary">
+      Search Last 30 Games
+    </mat-slide-toggle>
+  </div>
 </form>

@@ -2,19 +2,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { SportRadarConfig } from '../config/sportradar.config';
 import { firstValueFrom } from 'rxjs';
 import {
   SportRadarIDRegions,
   SportRadarIDLeagues,
 } from '../interfaces/sportradar.interface';
+import { SportRadarConfigService } from '../config/sportradar-config.service';
 
 @Injectable()
 export class SportRadarService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly sportRadarConfigService: SportRadarConfigService,
+    private readonly httpService: HttpService
+  ) {}
 
   private getAuthenticatedUrl(endpoint: string): string {
-    return `${SportRadarConfig.BASE_URL}${endpoint}?api_key=${SportRadarConfig.API_KEY}`;
+    return `${this.sportRadarConfigService.baseUrl}${endpoint}?api_key=${this.sportRadarConfigService.apiKey}`;
   }
 
   async makeAuthenticatedRequest<T>(endpoint: string): Promise<any> {
@@ -27,7 +30,7 @@ export class SportRadarService {
           },
         })
       );
-      return response;
+      return response.data;
     } catch (error) {
       console.log('error: ', error);
       throw new HttpException(
@@ -109,6 +112,22 @@ export class SportRadarService {
         name: key.split('_').join(' '),
       })
     );
+
     return competitions;
+  }
+
+  async getSeasons(): Promise<{ seasons: Array<any> }> {
+    const res = await this.makeAuthenticatedRequest(
+      `/soccer/trial/v4/en/seasons.json`
+    );
+    return res.seasons;
+  }
+
+  async getSeasonCompetitors(season_id: string): Promise<any> {
+    const res = await this.makeAuthenticatedRequest(
+      `soccer/trial/v4/en/seasons/${season_id}/competitors.json`
+    );
+
+    return res.season_competitors;
   }
 }

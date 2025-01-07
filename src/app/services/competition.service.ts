@@ -34,4 +34,14 @@ export class CompetitionService {
     }
     return this.http.get<any>(`${this.apiUrl}/teams`, { params });
   }
+
+  getSeasonCompetitors(seasonId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/season-competitors`, {
+      params: { season_id: seasonId }
+    });
+  }
+
+  getSeasons(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/seasons`);
+  }
 }

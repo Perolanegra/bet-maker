@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { SportRadarService } from './services/sportradar.service';
+import { SportRadarConfigService } from './config/sportradar-config.service';
 
 @Module({
   imports: [
@@ -9,7 +10,7 @@ import { SportRadarService } from './services/sportradar.service';
       maxRedirects: 5,
     }),
   ],
-  providers: [SportRadarService],
+  providers: [SportRadarService, SportRadarConfigService],
   exports: [SportRadarService],
 })
 export class SportRadarModule {} 

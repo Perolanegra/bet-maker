@@ -1,0 +1,41 @@
+.filter-form {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+mat-form-field {
+  min-width: 200px;
+}
+
+.slide-toggle-container {
+  margin-left: 10px;
+}
+
+// Animation classes
+.fade-in {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.slide-in {
+  transform: translateX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.slide-out {
+  transform: translateX(-20px);
+  transition: transform 0.3s ease-in-out;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

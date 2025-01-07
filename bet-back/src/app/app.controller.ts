@@ -40,4 +40,14 @@ export class AppController {
       region as SportRadarIDRegions
     );
   }
+
+  @Get('seasons')
+  async getSeasons() {
+    return await this.sportRadarService.getSeasons();
+  }
+
+  @Get('season-competitors')
+  async getSeasonCompetitors(@Query('season_id') season_id: string) {
+    return await this.sportRadarService.getSeasonCompetitors(season_id);
+  }
 }
