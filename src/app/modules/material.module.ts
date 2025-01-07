@@ -7,6 +7,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatStepperModule } from '@angular/material/stepper';
 
 const SHARED_MODULES = [
   MatSelectModule,
@@ -18,6 +19,8 @@ const SHARED_MODULES = [
   MatAutocompleteModule,
   ReactiveFormsModule,
   FormsModule,
+  MatStepperModule,
+  MatButtonModule,
 ];
 
 @NgModule({

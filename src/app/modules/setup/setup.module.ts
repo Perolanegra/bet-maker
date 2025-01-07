@@ -11,7 +11,7 @@ import { CompetitionService } from '../../services/competition.service';
       {
         path: '',
         loadComponent: () =>
-          import('./dashboard.component').then((c) => c.DashboardComponent),
+          import('./setup.component').then((c) => c.SetupComponent),
         resolve: {
           competitions: getCompetitionsResolver,
         },
@@ -20,4 +20,4 @@ import { CompetitionService } from '../../services/competition.service';
     ]),
   ],
 })
-export class DashboardModule {}
+export class SetupModule {}

@@ -8,27 +8,17 @@ import { CompetitionService } from '../../services/competition.service';
 import { Observable, of, switchMap, map, startWith } from 'rxjs';
 import { trigger, transition, style, animate } from '@angular/animations';
 
-interface Competition {
-  id: string;
-  name: string;
-}
-
-interface Season {
-  id: string;
-  name: string;
-}
-
-interface Team {
+interface SelectPropsDef {
   id: string;
   name: string;
 }
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-setup',
   standalone: true,
   imports: [CommonModule, MaterialModule],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  templateUrl: './setup.component.html',
+  styleUrls: ['./setup.component.scss'],
   animations: [
     trigger('fadeInOut', [
       transition(':enter', [
@@ -48,15 +38,15 @@ interface Team {
     ]),
   ],
 })
-export class DashboardComponent implements AfterViewInit {
-  competitions: Competition[] = [];
+export class SetupComponent implements AfterViewInit {
+  competitions: SelectPropsDef[] = [];
   teams: any;
   filterForm!: FormGroup;
   isLoading = false;
   seasons: Array<any> = [];
-  filteredCompetitions!: Observable<Competition[]> | any;
-  filteredSeasons!: Observable<Season[]> | any;
-  filteredTeams!: Observable<Team[]> | any;
+  filteredCompetitions!: Observable<SelectPropsDef[]> | any;
+  filteredSeasons!: Observable<SelectPropsDef[]> | any;
+  filteredTeams!: Observable<SelectPropsDef[]> | any;
 
   constructor(
     private route: ActivatedRoute,
@@ -83,7 +73,6 @@ export class DashboardComponent implements AfterViewInit {
       selectedSeason: new FormControl({ value: null, disabled: true }, [
         Validators.required,
       ]),
-      last30Games: new FormControl({ value: false, disabled: false }),
     });
   }
 
@@ -97,21 +86,20 @@ export class DashboardComponent implements AfterViewInit {
     );
   }
 
-  private _filter(name: string): Competition[] {
+  private _filter(name: string): SelectPropsDef[] {
     const filterValue = name.toLowerCase();
     return this.competitions.filter(competition => 
       competition.name.toLowerCase().includes(filterValue)
     );
   }
 
-  displayCompetition(competition: Competition): string {
+  displayCompetition(competition: SelectPropsDef): string {
     return competition && competition.name ? competition.name : '';
   }
 
   getTeams(competitionId: string) {
     if (!competitionId) {
       this.filterForm.get('selectedTeam')?.disable();
-      this.filterForm.get('last30Games')?.disable();
       return of([]);
     }
 
@@ -123,24 +111,24 @@ export class DashboardComponent implements AfterViewInit {
   getSeasonCompetitors = (seasonId: string) =>
     this.competitionService.getSeasonCompetitors(seasonId);
 
-  displaySeason(season: Season): string {
+  displaySeason(season: SelectPropsDef): string {
     return season && season.name ? season.name : '';
   }
 
-  displayTeam(team: Team): string {
+  displayTeam(team: SelectPropsDef): string {
     return team && team.name ? team.name : '';
   }
 
-  private _filterSeasons(name: string): Season[] {
+  private _filterSeasons(name: string): SelectPropsDef[] {
     const filterValue = name.toLowerCase();
     return this.seasons.filter(season => 
       season.name.toLowerCase().includes(filterValue)
     );
   }
 
-  private _filterTeams(name: string): Team[] {
+  private _filterTeams(name: string): SelectPropsDef[] {
     const filterValue = name.toLowerCase();
-    return this.teams.filter((team: Team) => 
+    return this.teams.filter((team: SelectPropsDef) => 
       team.name.toLowerCase().includes(filterValue)
     );
   }
@@ -170,7 +158,7 @@ export class DashboardComponent implements AfterViewInit {
     this.filterForm
       .get('selectedCompetition')
       ?.valueChanges.pipe(
-        switchMap((competition: Competition) => {
+        switchMap((competition: SelectPropsDef) => {
           if (competition?.id) {
             this.isLoading = true;
             return this.getSeasons();
@@ -191,7 +179,7 @@ export class DashboardComponent implements AfterViewInit {
     this.filterForm
       .get('selectedSeason')
       ?.valueChanges.pipe(
-        switchMap((season: Season) => {
+        switchMap((season: SelectPropsDef) => {
           if (season?.id) {
             this.isLoading = true;
             return this.getSeasonCompetitors(season.id);
@@ -211,13 +199,4 @@ export class DashboardComponent implements AfterViewInit {
       });
   }
 
-  searchLast30Games() {
-    const competitionId = this.filterForm.get('selectedCompetition')?.value;
-    const teamId = this.filterForm.get('selectedTeam')?.value;
-
-    if (competitionId && teamId) {
-      // Implement the search logic here
-      console.log('Searching last 30 games for:', { competitionId, teamId });
-    }
-  }
 }

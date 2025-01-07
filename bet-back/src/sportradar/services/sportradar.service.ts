@@ -42,7 +42,7 @@ export class SportRadarService {
   async getNFLCompetitions(): Promise<boolean> {
     try {
       const res = await this.makeAuthenticatedRequest(
-        '/nfl/official/trial/v7/en/games/2023/reg/schedule.xml'
+        'nfl/official/trial/v7/en/games/2023/reg/schedule.xml'
       );
       return res.data;
     } catch (error) {
@@ -56,7 +56,7 @@ export class SportRadarService {
   ): Promise<any> {
     try {
       const res: any = await this.makeAuthenticatedRequest(
-        `/soccer/trial/v4/${region}/teams/${teamId}/results`
+        `soccer/trial/v4/${region}/teams/${teamId}/results`
       );
       return res?.matches;
     } catch (error) {
@@ -81,7 +81,7 @@ export class SportRadarService {
   async getSoccerCompetitions(region = SportRadarIDRegions.EU): Promise<any> {
     try {
       const res = await this.makeAuthenticatedRequest(
-        `/soccer/trial/v4/${region}/competitions.json`
+        `soccer/trial/v4/${region}/competitions.json`
       );
       return res.data;
     } catch (error) {
@@ -96,7 +96,7 @@ export class SportRadarService {
   }: any): Promise<any> {
     try {
       const res = await this.makeAuthenticatedRequest(
-        `/soccer/trial/v4/${language_code}/competitors/${competitor_id}/schedules.${format}`
+        `soccer/trial/v4/${language_code}/competitors/${competitor_id}/schedules.${format}`
       );
       return res.schedules;
     } catch (error) {
@@ -106,14 +106,14 @@ export class SportRadarService {
 
   async getCompetitionsList(): Promise<{ id: string; name: string }[]> {
     const res = await this.makeAuthenticatedRequest(
-      `/soccer/trial/v4/en/competitions.json`
+      `soccer/trial/v4/en/competitions.json`
     );
     return res.competitions;
   }
 
   async getSeasons(): Promise<{ seasons: Array<any> }> {
     const res = await this.makeAuthenticatedRequest(
-      `/soccer/trial/v4/en/seasons.json`
+      `soccer/trial/v4/en/seasons.json`
     );
     return res.seasons;
   }
