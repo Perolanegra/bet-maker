@@ -5,7 +5,6 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import {
   SportRadarIDRegions,
-  SportRadarIDLeagues,
 } from '../interfaces/sportradar.interface';
 import { SportRadarConfigService } from '../config/sportradar-config.service';
 
@@ -106,14 +105,10 @@ export class SportRadarService {
   }
 
   async getCompetitionsList(): Promise<{ id: string; name: string }[]> {
-    const competitions = Object.entries(SportRadarIDLeagues).map(
-      ([key, value]) => ({
-        id: value,
-        name: key.split('_').join(' '),
-      })
+    const res = await this.makeAuthenticatedRequest(
+      `/soccer/trial/v4/en/competitions.json`
     );
-
-    return competitions;
+    return res.competitions;
   }
 
   async getSeasons(): Promise<{ seasons: Array<any> }> {

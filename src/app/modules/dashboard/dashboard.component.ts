@@ -5,8 +5,23 @@ import { ActivatedRoute } from '@angular/router';
 import { MaterialModule } from '../material.module';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CompetitionService } from '../../services/competition.service';
-import { of, switchMap } from 'rxjs';
+import { Observable, of, switchMap, map, startWith } from 'rxjs';
 import { trigger, transition, style, animate } from '@angular/animations';
+
+interface Competition {
+  id: string;
+  name: string;
+}
+
+interface Season {
+  id: string;
+  name: string;
+}
+
+interface Team {
+  id: string;
+  name: string;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -34,11 +49,14 @@ import { trigger, transition, style, animate } from '@angular/animations';
   ],
 })
 export class DashboardComponent implements AfterViewInit {
-  competitions: any;
+  competitions: Competition[] = [];
   teams: any;
   filterForm!: FormGroup;
   isLoading = false;
   seasons: Array<any> = [];
+  filteredCompetitions!: Observable<Competition[]> | any;
+  filteredSeasons!: Observable<Season[]> | any;
+  filteredTeams!: Observable<Team[]> | any;
 
   constructor(
     private route: ActivatedRoute,
@@ -51,9 +69,12 @@ export class DashboardComponent implements AfterViewInit {
     this.competitions = this.route.snapshot.data['competitions'];
     this.teams = this.route.snapshot.data['teams'];
     this.setupFormSubscriptions();
+    this.setupCompetitionAutocomplete();
+    this.setupSeasonAutocomplete();
+    this.setupTeamAutocomplete();
   }
 
-  makeForms() {
+  makeForms(): void {
     this.filterForm = new FormGroup({
       selectedCompetition: new FormControl(null, [Validators.required]),
       selectedTeam: new FormControl({ value: null, disabled: true }, [
@@ -64,6 +85,27 @@ export class DashboardComponent implements AfterViewInit {
       ]),
       last30Games: new FormControl({ value: false, disabled: false }),
     });
+  }
+
+  setupCompetitionAutocomplete() {
+    this.filteredCompetitions = this.filterForm.get('selectedCompetition')?.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filter(name as string) : this.competitions.slice();
+      })
+    );
+  }
+
+  private _filter(name: string): Competition[] {
+    const filterValue = name.toLowerCase();
+    return this.competitions.filter(competition => 
+      competition.name.toLowerCase().includes(filterValue)
+    );
+  }
+
+  displayCompetition(competition: Competition): string {
+    return competition && competition.name ? competition.name : '';
   }
 
   getTeams(competitionId: string) {
@@ -81,14 +123,59 @@ export class DashboardComponent implements AfterViewInit {
   getSeasonCompetitors = (seasonId: string) =>
     this.competitionService.getSeasonCompetitors(seasonId);
 
+  displaySeason(season: Season): string {
+    return season && season.name ? season.name : '';
+  }
+
+  displayTeam(team: Team): string {
+    return team && team.name ? team.name : '';
+  }
+
+  private _filterSeasons(name: string): Season[] {
+    const filterValue = name.toLowerCase();
+    return this.seasons.filter(season => 
+      season.name.toLowerCase().includes(filterValue)
+    );
+  }
+
+  private _filterTeams(name: string): Team[] {
+    const filterValue = name.toLowerCase();
+    return this.teams.filter((team: Team) => 
+      team.name.toLowerCase().includes(filterValue)
+    );
+  }
+
+  setupSeasonAutocomplete() {
+    this.filteredSeasons = this.filterForm.get('selectedSeason')?.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filterSeasons(name as string) : this.seasons.slice();
+      })
+    );
+  }
+
+  setupTeamAutocomplete() {
+    this.filteredTeams = this.filterForm.get('selectedTeam')?.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filterTeams(name as string) : this.teams?.slice();
+      })
+    );
+  }
+
   setupFormSubscriptions(): void {
     // Competition selection subscription
     this.filterForm
       .get('selectedCompetition')
       ?.valueChanges.pipe(
-        switchMap(() => {
-          this.isLoading = true;
-          return this.getSeasons();
+        switchMap((competition: Competition) => {
+          if (competition?.id) {
+            this.isLoading = true;
+            return this.getSeasons();
+          }
+          return of([]);
         })
       )
       .subscribe((seasons) => {
@@ -97,18 +184,17 @@ export class DashboardComponent implements AfterViewInit {
         const seasonControl = this.filterForm.get('selectedSeason');
         seasonControl?.setValue(null);
         seasonControl?.enable();
+        this.setupSeasonAutocomplete();
       });
 
-    // Team selection subscription
+    // Season selection subscription
     this.filterForm
       .get('selectedSeason')
       ?.valueChanges.pipe(
-        switchMap((val) => {
-          if (val) {
+        switchMap((season: Season) => {
+          if (season?.id) {
             this.isLoading = true;
-            return this.getSeasonCompetitors(
-              this.filterForm.get('selectedSeason')?.value
-            );
+            return this.getSeasonCompetitors(season.id);
           }
           return of([]);
         })
@@ -120,6 +206,7 @@ export class DashboardComponent implements AfterViewInit {
           const teamControl = this.filterForm.get('selectedTeam');
           teamControl?.setValue(null);
           teamControl?.enable();
+          this.setupTeamAutocomplete();
         }
       });
   }

@@ -1,39 +1,51 @@
 <form [formGroup]="filterForm" class="filter-form">
-  <!-- Competition Select -->
+  <!-- Competition Autocomplete -->
   <mat-form-field appearance="fill" [@fadeInOut]>
     <mat-label>League/Competition</mat-label>
-    <mat-select formControlName="selectedCompetition">
-      <mat-option *ngFor="let c of competitions" [value]="c.id">
-        {{ c.name }}
+    <input type="text"
+           matInput
+           formControlName="selectedCompetition"
+           [matAutocomplete]="autoCompetition">
+    <mat-autocomplete #autoCompetition="matAutocomplete" [displayWith]="displayCompetition">
+      <mat-option *ngFor="let competition of filteredCompetitions | async" [value]="competition">
+        {{ competition.name }}
       </mat-option>
-    </mat-select>
+    </mat-autocomplete>
     <mat-error *ngIf="filterForm.get('selectedCompetition')?.hasError('required')">
       Please select a league
     </mat-error>
   </mat-form-field>
 
-  <!-- Season Select -->
+  <!-- Season Autocomplete -->
   <mat-form-field appearance="fill" [@slideInOut]>
     <mat-label>Season</mat-label>
-    <mat-select formControlName="selectedSeason">
-      <mat-option *ngFor="let season of seasons" [value]="season.id">
+    <input type="text"
+           matInput
+           formControlName="selectedSeason"
+           [matAutocomplete]="autoSeason">
+    <mat-autocomplete #autoSeason="matAutocomplete" [displayWith]="displaySeason">
+      <mat-option *ngFor="let season of filteredSeasons | async" [value]="season">
         {{ season.name }}
       </mat-option>
-    </mat-select>
-    <mat-error *ngIf="filterForm.get('selectedseason')?.hasError('required')">
+    </mat-autocomplete>
+    <mat-error *ngIf="filterForm.get('selectedSeason')?.hasError('required')">
       Please select a season
     </mat-error>
     <mat-spinner *ngIf="isLoading" diameter="20" class="loading-spinner"></mat-spinner>
   </mat-form-field>
 
-  <!-- Team Select -->
+  <!-- Team Autocomplete -->
   <mat-form-field appearance="fill" [@slideInOut]>
     <mat-label>Team</mat-label>
-    <mat-select formControlName="selectedTeam">
-      <mat-option *ngFor="let team of teams" [value]="team.id">
+    <input type="text"
+           matInput
+           formControlName="selectedTeam"
+           [matAutocomplete]="autoTeam">
+    <mat-autocomplete #autoTeam="matAutocomplete" [displayWith]="displayTeam">
+      <mat-option *ngFor="let team of filteredTeams | async" [value]="team">
         {{ team.name }}
       </mat-option>
-    </mat-select>
+    </mat-autocomplete>
     <mat-error *ngIf="filterForm.get('selectedTeam')?.hasError('required')">
       Please select a team
     </mat-error>
