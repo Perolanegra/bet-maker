@@ -199,4 +199,8 @@ export class SetupComponent implements AfterViewInit {
       });
   }
 
+  submit() {
+    console.log(this.filterForm.value);
+  }
+
 }
