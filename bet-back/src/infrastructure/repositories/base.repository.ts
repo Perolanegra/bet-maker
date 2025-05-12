@@ -1,4 +1,4 @@
-import { IBaseRepository } from '../../domain/interfaces/repository.interface';
+import { IBaseRepository } from '@domain/interfaces/repository.interface';
 
 export abstract class BaseRepository<T> implements IBaseRepository<T> {
 

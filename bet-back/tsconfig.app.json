@@ -5,7 +5,14 @@
     "module": "commonjs",
     "types": ["node"],
     "emitDecoratorMetadata": true,
-    "target": "es2021"
+    "target": "es2021",
+    "baseUrl": "./src",
+    "paths": {
+      "@domain/*": ["domain/*"],
+      "@application/*": ["application/*"],
+      "@infrastructure/*": ["infrastructure/*"],
+      "@shared/*": ["shared/*"]
+    }
   },
   "include": ["src/**/*.ts"]
 }

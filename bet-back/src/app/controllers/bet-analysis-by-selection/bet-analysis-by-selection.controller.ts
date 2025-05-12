@@ -1,0 +1,53 @@
+import { Controller, Get, Query } from '@nestjs/common';
+import { SportRadarIDRegions } from '@domain/interfaces';
+import { SportRadarService } from '@domain/services/sportradar.service';
+
+@Controller()
+export class BetAnalysisBySelectionController {
+  constructor(private readonly sportRadarService: SportRadarService) {}
+
+  @Get('matches')
+  async getMatches(
+    @Query('team_id') team_id: string,
+    @Query('region') region: string
+  ) {
+    const isConnected = await this.sportRadarService.getMatchesByTeamId(
+      team_id,
+      region as SportRadarIDRegions
+    );
+    return { isConnected };
+  }
+
+  @Get('competitions')
+  async getCompetitions() {
+    return await this.sportRadarService.getCompetitionsList();
+  }
+
+  @Get('competitor-schedules')
+  async getCompetitorSchedules(@Query('competitor_id') competitor_id: string) {
+    return await this.sportRadarService.getLast30MatchesByCompetitorId({
+      competitor_id,
+    });
+  }
+
+  @Get('teams')
+  async getTeamsByCompetitionId(
+    @Query('competition_id') competition_id: string,
+    @Query('region') region: string
+  ) {
+    return await this.sportRadarService.getTeamsByCompetitionId(
+      competition_id,
+      region as SportRadarIDRegions
+    );
+  }
+
+  @Get('seasons')
+  async getSeasons() {
+    return await this.sportRadarService.getSeasons();
+  }
+
+  @Get('season-competitors')
+  async getSeasonCompetitors(@Query('season_id') season_id: string) {
+    return await this.sportRadarService.getSeasonCompetitors(season_id);
+  }
+}

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app/controllers/app.controller';
 import { SportRadarModule } from './domain/modules/sportradar.module';
+import { BetAnalysisBySelectionController } from './app/controllers/bet-analysis-by-selection/bet-analysis-by-selection.controller';
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { SportRadarModule } from './domain/modules/sportradar.module';
     }),
     SportRadarModule,
   ],
-  controllers: [AppController],
+  controllers: [BetAnalysisBySelectionController],
   providers: [],
 })
 export class AppModule {}

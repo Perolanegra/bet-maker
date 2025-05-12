@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
-    "s:back": "npx nx serve bet-back",
+    "s:back": "nx serve bet-back",
     "build": "nx build",
     "test": "nx test"
   },
