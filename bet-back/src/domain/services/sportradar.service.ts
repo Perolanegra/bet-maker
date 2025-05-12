@@ -125,4 +125,9 @@ export class SportRadarService {
 
     return res.season_competitors;
   }
+
+  async getMatchesByTeamName(team_name: string) { // FELIPE
+    const res = await this.makeAuthenticatedRequest('')
+    return res;
+  }
 }
