@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import {
   SportRadarIDRegions,
 } from '../interfaces/sportradar.interface';
-import { SportRadarConfigService } from '../config/sportradar-config.service';
+import { SportRadarConfigService } from '../../infrastructure/config/sportradar-config.service';
 
 @Injectable()
 export class SportRadarService {

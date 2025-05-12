@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { SportRadarService } from './services/sportradar.service';
-import { SportRadarConfigService } from './config/sportradar-config.service';
+import { SportRadarService } from '../services/sportradar.service';
+import { SportRadarConfigService } from '../../infrastructure/config/sportradar-config.service';
 
 @Module({
   imports: [

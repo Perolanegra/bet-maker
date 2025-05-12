@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { SportRadarModule } from '../sportradar/sportradar.module';
+import { AppController } from './app/controllers/app.controller';
+import { SportRadarModule } from './domain/modules/sportradar.module';
 
 @Module({
   imports: [

@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { SportRadarService } from '../sportradar/services/sportradar.service';
-import { SportRadarIDRegions } from '../sportradar/interfaces/sportradar.interface';
+import { SportRadarService } from '../../domain/services/sportradar.service';
+import { SportRadarIDRegions } from '../../domain/interfaces/sportradar.interface';
 
 @Controller()
 export class AppController {
