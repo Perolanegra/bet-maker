@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SportRadarModule } from './domain/modules/sportradar.module';
-import { BetAnalysisBySelectionController } from './app/controllers/bet-analysis-by-selection/bet-analysis-by-selection.controller';
+import { BetAnalysisBySelectionController } from './application/controllers/bet-analysis-by-selection/bet-analysis-by-selection.controller';
 
 @Module({
   imports: [

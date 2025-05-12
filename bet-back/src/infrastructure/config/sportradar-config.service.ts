@@ -20,4 +20,8 @@ export class SportRadarConfigService {
   get language(): string | undefined {
     return this.configService.get<string>('SPORTRADAR_LANGUAGE');
   }
+
+  get host(): string | undefined {
+    return this.configService.get<string>('SPORTRADAR_API_HOST');
+  }
 }
