@@ -9,7 +9,7 @@ import {
   FixtureStatisticsResponse,
   Match,
 } from '@domain/interfaces/match.interface';
-import { Team, TeamInfo } from '@domain/interfaces/team.interface';
+import { Team, TeamInfo, TeamStatistics, TeamStatisticsResponse } from '@domain/interfaces/team.interface';
 
 @Injectable()
 export class SportRadarService {
@@ -74,6 +74,50 @@ export class SportRadarService {
     } catch (error) {
       throw new HttpException(
         'Failed to fetch match statistics',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  async getMatchStatsByTeamName(teamName: string): Promise<FixtureStatisticsResponse[]> {
+    try {
+      const teamsInfo = await this.findTeamByName(teamName);
+      if (!teamsInfo.length) {
+        throw new HttpException(
+          'Team not found',
+          HttpStatus.NOT_FOUND
+        );
+      }
+
+      const teamId = teamsInfo[0].team.id;
+      const matches = await this.getMatchesByTeamId({
+        team: teamId,
+        season: (new Date().getFullYear() - 1).toString(),
+        status: 'NS'
+      });
+
+      if (!matches.length) {
+        return [];
+      }
+
+      const fixtureId = matches[0].fixture.id;
+      return await this.getMatchStatsByFixtureId(fixtureId);
+    } catch (error) {
+      throw new HttpException(
+        'Failed to fetch match statistics by team name',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  async getTeamStatistics(payload: { league: string, season: string, team: string }): Promise<TeamStatistics> {
+    try {
+      const endpoint = `/teams/statistics?league=${payload.league}&season=${payload.season}&team=${payload.team}`;
+      const res = await this.makeAuthenticatedRequest<TeamStatisticsResponse>(endpoint);
+      return res.response;
+    } catch (error) {
+      throw new HttpException(
+        'Failed to fetch team statistics',
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
