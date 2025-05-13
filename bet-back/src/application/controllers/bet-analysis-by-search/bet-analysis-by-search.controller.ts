@@ -1,14 +1,15 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { MatchService } from '@domain/services/match.service';
 
 @Controller()
 export class BetAnalysisBySearchController {
+  constructor(private readonly matchService: MatchService) { }
 
   @Get('matches')
-  async getMatches(
-    @Query('team_name') team_name: string
+  getMatches(
+    @Query('teamName') teamName: string
   ) {
-    //TODO: Create a service called MatchService and retrieve all the matches based on the name of the team searched
-    return;
+    return this.matchService.findByTeamName(teamName);
   }
- 
+
 }
