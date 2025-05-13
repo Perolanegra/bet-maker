@@ -19,7 +19,7 @@ export class MatchService extends BaseService<any> {
         await this.sportRadarService.findTeamByName(teamName);
 
       const payload = {
-        team: teamsInfo.at(0)?.team.id,
+        team: teamsInfo.at(0)?.team.id, // API force us to use a flow for retrieve specifically what we want, so i dont want to make any other requests to avoid paying more
         season: season ?? new Date().getFullYear().toString(),
         status: 'NS'
       }
