@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BaseService } from './base.service';
 import { SportRadarService } from './sportradar.service';
-import { TeamInfo } from '@domain/interfaces/team.interface';
+import { Team, TeamInfo } from '@domain/interfaces/team.interface';
 
 @Injectable()
 export class MatchService extends BaseService<any> {
@@ -12,15 +12,18 @@ export class MatchService extends BaseService<any> {
     super(null as unknown as any); // Since we're not using a repository directly
   }
 
-  async findByTeamName(teamName: string): Promise<any[]> {
+  async findByTeamName(teamName: string, season = null): Promise<any[]> {
     try {
       const teamsInfo: TeamInfo[] =
-        await this.sportRadarService.searchTeamsByName(teamName);
-      const filteredTeamIds = teamsInfo.map(
-        (teamInfo: TeamInfo) => teamInfo.team.id
-      );
+        await this.sportRadarService.findTeamByName(teamName);
 
-      const res = await this.sportRadarService.getMatchesByTeams(filteredTeamIds);
+      const payload = {
+        team: teamsInfo.at(0)?.team.id,
+        season: season ?? new Date().getFullYear().toString(),
+        status: 'NS'
+      }
+
+      const res = await this.sportRadarService.getMatchesByTeamId(payload);
       const filteredMatches = res.map(item => item.fixture);
 
       return filteredMatches;
