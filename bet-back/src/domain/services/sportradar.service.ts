@@ -4,7 +4,6 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { SportRadarConfigService } from '../../infrastructure/config/sportradar-config.service';
 import {
-  Fixture,
   FixtureResponse,
   FixtureStatisticsResponse,
   Match,
