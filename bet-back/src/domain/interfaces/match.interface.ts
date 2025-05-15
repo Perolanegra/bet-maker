@@ -70,8 +70,17 @@ export interface Match {
     };
 }
 
+export interface FixtureStatistics {
+    team: {
+        id: number;
+        name: string;
+        logo: string;
+    };
+    statistics: Array<{ type: string, value: number }>
+}
+
 export interface FixtureStatisticsResponse {
-    response: any
+    response: FixtureStatistics[];
 }
 
 export interface FixtureResponse {

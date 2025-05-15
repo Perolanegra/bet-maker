@@ -5,10 +5,11 @@ import { firstValueFrom } from 'rxjs';
 import { SportRadarConfigService } from '../../infrastructure/config/sportradar-config.service';
 import {
   FixtureResponse,
+  FixtureStatistics,
   FixtureStatisticsResponse,
   Match,
 } from '@domain/interfaces/match.interface';
-import { Team, TeamInfo, TeamStatistics, TeamStatisticsResponse } from '@domain/interfaces/team.interface';
+import { TeamInfo, TeamStatistics, TeamStatisticsResponse } from '@domain/interfaces/team.interface';
 
 @Injectable()
 export class SportRadarService {
@@ -63,7 +64,7 @@ export class SportRadarService {
 
   async getMatchStatsByFixtureId(
     fixtureId: number
-  ): Promise<FixtureStatisticsResponse[]> {
+  ): Promise<FixtureStatistics[]> {
     try {
       const res =
         await this.makeAuthenticatedRequest<FixtureStatisticsResponse>(
@@ -78,7 +79,7 @@ export class SportRadarService {
     }
   }
 
-  async getMatchStatsByTeamName(teamName: string): Promise<FixtureStatisticsResponse[]> {
+  async getMatchStatsByTeamName(teamName: string): Promise<FixtureStatistics[]> { // TODO; Refactor, right now its wrong.
     try {
       const teamsInfo = await this.findTeamByName(teamName);
       if (!teamsInfo.length) {
@@ -111,7 +112,7 @@ export class SportRadarService {
 
   async getTeamStatistics(payload: { league: string, season: string, team: string }): Promise<TeamStatistics> {
     try {
-      const endpoint = `/teams/statistics?league=${payload.league}&season=${payload.season}&team=${payload.team}`;
+      const endpoint = `teams/statistics?league=${payload.league}&season=${payload.season}&team=${payload.team}`;
       const res = await this.makeAuthenticatedRequest<TeamStatisticsResponse>(endpoint);
       return res.response;
     } catch (error) {
@@ -122,8 +123,28 @@ export class SportRadarService {
     }
   }
 
+  /**
+   * Retrieves the last X number of matches from the API
+   * @param XGames - The number of most recent matches to retrieve
+   * @returns Promise containing an array of Match objects
+   * @throws HttpException if the API request fails
+   */
+  async getLastXGames(XGames: string): Promise<Match[]> {
+    try {
+      const endpoint = `fixtures?last=${XGames}`;
+      const res = await this.makeAuthenticatedRequest<FixtureResponse>(endpoint);
+      return res.response;
+    } catch (error) {
+      throw new HttpException(
+        `Failed to fetch last ${XGames} matches`,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+
+  }
+
   async findTeamByName(teamName: string): Promise<TeamInfo[]> {
-    const endpoint = `/teams?name=${teamName}`;
+    const endpoint = `teams?name=${teamName}`;
     const res = await this.makeAuthenticatedRequest<any>(endpoint);
     return res.response;
   }
